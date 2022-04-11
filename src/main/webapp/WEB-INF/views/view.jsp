@@ -49,13 +49,28 @@
             </form>
             <div class="btn_wrap text-center">
                 <a href="/board/list.do" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-<%--                <input type="button" onclick="deleteDemo(${demo.idx});" class="btn btn-danger waves-effect waves-light" value="삭제하기"></input>--%>
+                <input type="button" onclick="deleteboard(${boardview.idx});" class="btn btn-danger waves-effect waves-light" value="삭제하기"></input>
                 <a href="/board/write.do?idx=${boardview.idx}" class="btn btn-primary waves-effect waves-light">수정하기</a>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script>
+    function deleteboard(idx) {
+
+        if(confirm("정말 삭제하겠습니까?")) {
+
+            let form = document.createElement('form');
+            form.action = 'boardDeleteApi';
+            form.method = 'POST';
+            form.innerHTML = '<input type="hidden" name="idx" value="' + idx + '">';
+
+            document.body.append(form);
+
+            form.submit();
+        }
+    }
+</script>
 </html>
 

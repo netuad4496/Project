@@ -5,7 +5,7 @@
 <html lang="ko">
 <head>
     <meta charset="EUC-KR">
-    <title>Main page</title>
+    <title>List page</title>
     <link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
