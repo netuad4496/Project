@@ -74,6 +74,7 @@
         notice_yn ASC,
         idx DESC,
         insert_time DESC
+        LIMIT 30
     </select>
 
     <select id="selectBoardTotalCount" parameterType="BoardDTO" resultType="int">
