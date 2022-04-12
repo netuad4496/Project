@@ -4,6 +4,7 @@ import com.project.board.constant.Method;
 import com.project.board.domain.BoardDTO;
 import com.project.board.service.BoardService;
 import com.project.board.util.UiUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class BoardController extends UiUtils {
 
@@ -63,8 +65,15 @@ public class BoardController extends UiUtils {
             }
         } catch (DataAccessException e) {
             showMessageWithRedirect("데이터 베이스 문제 발생.", "/board/list.do", Method.GET, null, model);
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
+
         } catch (Exception e) {
             showMessageWithRedirect("시스템 문제 발생.", "/board/list.do", Method.GET, null, model);
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
         }
 
         return showMessageWithRedirect("게시글 등록 완료되었습니다.", "/board/list.do", Method.GET, null, model);
@@ -76,12 +85,19 @@ public class BoardController extends UiUtils {
         try {
             boolean result = boardService.deleteBoard(idx);
             if (result == false) {
-                System.out.println("삭제 실패");
+                showMessageWithRedirect("삭제 실패.", "/board/list.do", Method.GET, null, model);
             }
         } catch (DataAccessException e) {
             showMessageWithRedirect("데이터 베이스 문제 발생.", "/board/list.do", Method.GET, null, model);
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
+
         } catch (Exception e) {
             showMessageWithRedirect("시스템 문제 발생.", "/board/list.do", Method.GET, null, model);
+            e.printStackTrace();
+            log.error("Exception ERROR: {} ", e.getMessage());
+            throw e;
         }
 
         return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/board/list.do", Method.GET, null, model);
