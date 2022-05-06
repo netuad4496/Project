@@ -48,9 +48,9 @@
                 </div>
             </form>
             <div class="btn_wrap text-center">
-                <a href="/board/list.do" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-                <input type="button" onclick="deleteboard(${boardview.idx});" class="btn btn-danger waves-effect waves-light" value="삭제하기"></input>
-                <a href="/board/write.do?idx=${boardview.idx}" class="btn btn-primary waves-effect waves-light">수정하기</a>
+                <a href="/board/list.do${params.makeQueryString(params.currentPageNo)}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+                <input type="button" onclick="deleteboard(${boardview.idx})" class="btn btn-danger waves-effect waves-light" value="삭제하기"></input>
+                <a href="/board/write.do${params.makeQueryString(params.currentPageNo)}&idx=${boardview.idx}" class="btn btn-primary waves-effect waves-light">수정하기</a>
             </div>
         </div>
     </div>

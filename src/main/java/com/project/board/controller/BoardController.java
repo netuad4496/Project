@@ -2,6 +2,8 @@ package com.project.board.controller;
 
 import com.project.board.constant.Method;
 import com.project.board.domain.BoardDTO;
+import com.project.board.paging.Criteria;
+import com.project.board.paging.PaginationInfo;
 import com.project.board.service.BoardService;
 import com.project.board.util.UiUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +12,15 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -28,7 +35,7 @@ public class BoardController extends UiUtils {
     }
 
     @GetMapping(value = "/board/view.do")
-    public String boardView(@RequestParam("idx") Long idx, Model model) {
+    public String boardView(@ModelAttribute("params") BoardDTO params, @RequestParam("idx") Long idx, Model model) {
 
         if (idx == null) {
             showMessageWithRedirect("올바르지 않은 접근입니다.", "/board/list.do", Method.GET, null, model);
@@ -44,7 +51,8 @@ public class BoardController extends UiUtils {
     }
 
     @GetMapping(value = "/board/write.do")
-    public String openBoardWrite(@RequestParam(value = "idx", required = false) Long idx, final BoardDTO params, Model model) {
+    public String openBoardWrite(@ModelAttribute("param") BoardDTO param, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+
 
         if (idx == null) {
             model.addAttribute("params", new BoardDTO());
@@ -58,6 +66,7 @@ public class BoardController extends UiUtils {
 
     @PostMapping(value = "/board/RegisApi")
     public String RegisApi(final BoardDTO params, Model model) {
+
         try {
             boolean result = boardService.registerBoard(params);
             if (result == false) {
@@ -76,11 +85,12 @@ public class BoardController extends UiUtils {
             throw e;
         }
 
-        return showMessageWithRedirect("게시글 등록 완료되었습니다.", "/board/list.do", Method.GET, null, model);
+        return showMessageWithRedirect("게시글 등록 완료되었습니다.", "/board/list.do" + params + "", Method.GET, null, model);
     }
 
+
     @PostMapping(value = "/board/boardDeleteApi")
-    public String boardDeleteApi(@RequestParam("idx") Long idx, Model model) {
+    public String boardDeleteApi(@ModelAttribute("params") BoardDTO params, @RequestParam("idx") Long idx, Model model) {
 
         try {
             boolean result = boardService.deleteBoard(idx);
@@ -99,14 +109,16 @@ public class BoardController extends UiUtils {
             log.error("Exception ERROR: {} ", e.getMessage());
             throw e;
         }
+        log.info(params.makeQueryString(params.getCurrentPageNo()));
 
         return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/board/list.do", Method.GET, null, model);
     }
 
     @GetMapping(value = "/board/list.do")
-    public String boardList(Model model) {
-        List<BoardDTO> boardlist = boardService.getBoardList();
+    public String boardList(@ModelAttribute("params") BoardDTO params, Model model) {
+        List<BoardDTO> boardlist = boardService.getBoardList(params);
 
+        model.addAttribute("search", params);
         model.addAttribute("boardlist", boardlist);
 
         return "list";
